@@ -30,8 +30,8 @@ resources = {
     "milk": 200,
     "coffee": 100,
 }
-
 machine_on = True
+machine_profit = 0
 
 
 def get_coins():
@@ -58,18 +58,19 @@ def get_drink(requested_drink, money):
         "coffee": resources["coffee"] - drink['ingredients']['coffee'],
     })
     change -= drink['cost']
+    global machine_profit
+    machine_profit += drink['cost']
     return change
 
 
 def check_availability(requested_drink):
-    drink = MENU[requested_drink]
-    if resources["water"] - drink['ingredients']['water'] >= 0 and \
-            resources["milk"] - drink['ingredients']['milk'] >= 0 and \
-            resources["coffee"] - drink['ingredients']['coffee'] >= 0:
-        return True
+    drink = MENU[requested_drink]['ingredients']
+    for item in drink:
+        if drink[item] > resources[item]:
+            print(f"Too bad not enough {item} in the machine to produce your {requested_drink}, sorry!")
+            return False
 
-    print(f"Too bad not enough ingredients in the machine to produce your {requested_drink}, sorry!")
-    return False
+    return True
 
 
 def check_cash(requested_drink, coins_deposited):
@@ -84,12 +85,14 @@ def check_cash(requested_drink, coins_deposited):
 while machine_on:
     request = input("What would you like? (espresso/latte/capuccino): ")
 
-    if request == "report":
+    if request == "off":
+        machine_on = False
+    elif request == "report":
         print("------------------------------------")
-        print(f"Water: {resources.get('water')}ml")
-        print(f"Milk: {resources.get('milk')}ml")
-        print(f"Coffee: {resources.get('coffee')}g")
-        # print(f"Money: ${resources.get('money')}")
+        print(f"Water: {resources['water']}ml")
+        print(f"Milk: {resources['milk']}ml")
+        print(f"Coffee: {resources['coffee']}g")
+        print(f"Money: ${machine_profit}")
         print("------------------------------------")
     elif request == "espresso" or "latte" or "cappuccino":
         available = check_availability(request)

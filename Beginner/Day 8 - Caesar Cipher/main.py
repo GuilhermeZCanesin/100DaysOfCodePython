@@ -3,7 +3,7 @@ alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n'
 
 direction = input("\nType 'encode' to encrypt, type 'decode' to decrypt: ")
 text = input("\nType your message: ").lower()
-shift = int(input("\nType the encription/decription number: "))
+shift = int(input("\nType the encryption/description number: "))
 
 def caesar(key, data, direction):
 	final_text = ""
